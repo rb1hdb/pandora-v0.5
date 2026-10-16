@@ -1,0 +1,4 @@
+{
+  "enabled": true,
+  "comment": "Escapa < > para prevenir XSS via output do LLM. Não usa regex."
+}

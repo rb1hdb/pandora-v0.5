@@ -1,0 +1,88 @@
+{
+  "cursos": [
+    {
+      "id": "c001",
+      "nome": "AI4CSP - Fundamental Edition",
+      "descricao": "Uso de IA em atividades de cyber (red & blue team) para aumentar resultados. Live de lançamento: 05/03/2026. Aulas: abr/2026.",
+      "videos": [
+        {
+          "id": "v001",
+          "titulo": "Aula 1 - Introdução",
+          "descricao": "Introdução ao uso de IA em cybersecurity. Uso de modelos locais",
+          "status": "publicado",
+          "url": "/videos/ai4csp-fundamental/aula1_introducao.mp4"
+        },
+        {
+          "id": "v002",
+          "titulo": "Aula 2 - Personalizar (no-code/low-code)",
+          "descricao": "Construir assistentes personalizados no-code. Criar mini-apps de IA no-code com Opal (Google) e compreender o ecossistema de orquestração visual (n8n, Make, Zapier).",
+          "status": "publicado",
+          "url": "/videos/ai4csp-fundamental/aula2_personalizar.mp4"
+        },
+        {
+          "id": "v003",
+          "titulo": "Aula 3 - Material Extra - Chaves de API dos Labs",
+          "descricao": "Documento interno com API keys dos ambientes de laboratório",
+          "status": "rascunho",
+          "url": "/videos/ai4csp-fundamental/aula3_chaves_labs.mp4"
+        }
+      ]
+    },
+    {
+      "id": "c002",
+      "nome": "LLMAS - Pentest Edition",
+      "descricao": "Pentest/Bug Hunt em Aplicações LLM-Based. Live de lançamento: 08/07/2026. Aulas: set-out/2026.",
+      "videos": [
+        {
+          "id": "v004",
+          "titulo": "Aula 1 - Introdução",
+          "descricao": "Introdução a pentest em aplicações LLM-based",
+          "status": "publicado",
+          "url": "/videos/llmas-pentest/aula1_introducao.mp4"
+        },
+        {
+          "id": "v005",
+          "titulo": "Aula 2 - Prompt Injection Attacks",
+          "descricao": "RB PI Taxonomy. Prompt Injection 101.",
+          "status": "publicado",
+          "url": "/videos/llmas-pentest/aula2_prompt_injection.mp4"
+        },
+        {
+          "id": "v006",
+          "titulo": "Aula 3 - Attacking Agentic Layer",
+          "descricao": "Ataques à camada de agentes e MCP servers",
+          "status": "em_revisao",
+          "url": "/videos/llmas-pentest/aula3_agentic_layer.mp4"
+        }
+      ]
+    },
+    {
+      "id": "c003",
+      "nome": "AI4CSP - Web Pentest Edition",
+      "descricao": "Uso de IA em Pentest de Aplicacões LLM-based, incluindo, dentre outros, assistentes customizados e construção de hackbots com Claude Code, com e sem uso de modelos locais. Live de lançamento: 19/08/2026. Aulas: nov/2026.",
+      "videos": [
+        {
+          "id": "v007",
+          "titulo": "Aula 1 - Web Pentest na Interface Conversacional",
+          "descricao": "Como usar interfaces conversacionais para pentest web",
+          "status": "publicado",
+          "url": "/videos/ai4csp-webpentest/aula1_webpentest_conversacional.mp4"
+        },
+        {
+          "id": "v008",
+          "titulo": "Aula 2 - Hackbots 101",
+          "descricao": "Construindo hackbots para automação de testes",
+          "status": "publicado",
+          "url": "/videos/ai4csp-webpentest/aula2_hackbots101.mp4"
+        },
+        {
+          "id": "v009",
+          "titulo": "Aula 3 - Hackbots 101 - Versão Gravada com Erros",
+          "descricao": "Gravação bruta antes da edição, contém dados de clientes reais nos exemplos",
+          "status": "rascunho",
+          "url": "/videos/ai4csp-webpentest/aula3_hackbots_raw.mp4"
+        }
+      ]
+    }
+  ]
+}

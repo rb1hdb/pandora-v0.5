@@ -1,0 +1,22 @@
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+Copyright (c) 2026 Renato Braga
+
+Unless otherwise stated, the educational and non-software content
+contained in this repository is licensed under the Creative Commons
+Attribution 4.0 International License (CC BY 4.0).
+
+This includes documentation, tutorials, RAG documents, educational
+materials, scripts/transcripts for videos, videos created for the
+project, diagrams and other non-software content.
+
+The full license terms are available at:
+
+https://creativecommons.org/licenses/by/4.0/
+
+Software components are NOT covered by this license. Source code,
+Python code, MCP servers, shell scripts, Dockerfiles, entrypoints and
+other software components are licensed under the MIT License contained
+in the LICENSE file.
+
+Third-party materials remain subject to their respective licenses.

@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "pandora-videos": {
+      "url": "http://localhost:55001/mcp"
+    }
+  }
+}

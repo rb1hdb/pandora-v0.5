@@ -1,0 +1,12 @@
+services:
+  app:
+    build: .
+    container_name: pandora
+    ports:
+      - "55000:55000"
+      - "55001:55001"
+    volumes:
+      - ./:/app
+    restart: unless-stopped
+    cpus: 1.0
+    mem_limit: 2g

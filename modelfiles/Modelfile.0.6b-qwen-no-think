@@ -1,0 +1,55 @@
+FROM qwen3:0.6b-q4_K_M
+TEMPLATE """
+{{- $lastUserIdx := -1 -}}
+{{- range $idx, $msg := .Messages -}}
+{{- if eq $msg.Role "user" }}{{ $lastUserIdx = $idx }}{{ end -}}
+{{- end }}
+{{- if or .System .Tools }}system
+{{ if .System }}
+{{ .System }}
+{{- end }}
+{{- if .Tools }}
+
+# Tools
+
+You may call one or more functions to assist with the user query.
+
+You are provided with function signatures within <tools></tools> XML tags:
+<tools>
+{{- range .Tools }}
+{"type": "function", "function": {{ .Function }}}
+{{- end }}
+</tools>
+
+For each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:
+<tool_call>
+{"name": <function-name>, "arguments": <args-json-object>}
+</tool_call>
+{{- end -}}
+
+{{ end }}
+{{- range $i, $_ := .Messages }}
+{{- $last := eq (len (slice $.Messages $i)) 1 -}}
+{{- if eq .Role "user" }}user
+{{ .Content }}
+{{- if eq $i $lastUserIdx }} /no_think{{- end }}
+{{ else if eq .Role "assistant" }}assistant
+{{ if .Content }}{{ .Content }}
+{{- else if .ToolCalls }}<tool_call>
+{{ range .ToolCalls }}{"name": "{{ .Function.Name }}", "arguments": {{ .Function.Arguments }}}
+{{ end }}</tool_call>
+{{- end }}{{ if not $last }}
+{{ end }}
+{{- else if .Role "tool" }}user
+<tool_response>
+{{ .Content }}
+</tool_response>
+{{ end }}
+{{- if and (ne .Role "assistant") $last }}assistant
+<think>
+
+</think>
+
+{{ end }}
+{{- end }}
+"""

@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pandora Academy — Help</title>
+<link rel="icon" type="image/png" href="/static/favicon-pandora-48x48.png">
+<link rel="stylesheet" href="/static/style.css?v=8">
+</head>
+<body data-page="help">
+<header>
+    <a href="/chat" class="logo"><img src="/static/Banner-pandora-1920x480.png" alt="Pandora Academy"><span class="app-version">v0.5</span></a>
+    <nav>
+        <a href="/cursos" data-i18n="nav.courses">Courses</a>
+        <a href="/chat">Chat</a>
+        <a href="/help" class="active">Help</a>
+        <a href="/admin" class="nav-admin">Admin</a>
+        <button id="lang-toggle" class="lang-toggle" onclick="toggleLang()">🌐</button>
+    </nav>
+</header>
+
+<main>
+    <div class="page-content" style="max-width:860px">
+        <h1 class="page-title" data-i18n="help.title">Help</h1>
+        <p class="page-subtitle" data-i18n="help.subtitle">Technical documentation for the Pandora Academy v0.5 application</p>
+
+        <!-- Section 1: Features -->
+        <div class="help-section">
+            <div class="help-header" onclick="toggleSection(this)">
+                <h3 data-i18n="help.sec.features">01 — Features</h3>
+                <span class="help-arrow">▾</span>
+            </div>
+            <div class="help-body">
+                <div data-lang="en">
+                <p style="color:var(--text-secondary);font-size:.875rem;margin-top:1rem;">
+               <pre><span class="hl-orange">Pandora S.A.</span> is the fictional company that operates <span class="hl-orange">Pandora Academy</span>, an online information security courses platform.
+               <p><span class="hl-orange">Sage</span> is the virtual assistant that helps visitors with course information.
+
+<span class="hl-blue">1. Application pages (port 55000):</span>
+  <span class="hl-green">/cursos</span>  — public course and video catalog
+  <span class="hl-green">/chat</span>    — chat with Sage
+  <span class="hl-green">/help</span>    — this page (technical documentation)
+  <span class="hl-green">/admin</span>   — application configuration panel
+
+<span class="hl-blue">2. RAG:</span>
+  Backend: in-memory embeddings (bge-m3)
+  Embeddings: Ollama bge-m3 (dimension 1024)
+  Chunking: H1 + preamble + H2 (one section per chunk)
+  Test: send "what discounts for companies?" → should return politica_comercial.md
+
+<span class="hl-blue">3. MCP Server (port 55001):</span>
+  Protocol: MCP via Streamable HTTP at <code>/mcp</code>
+  Tools: <span class="hl-green">listar_cursos</span>, <span class="hl-green">listar_videos_do_curso</span>, <span class="hl-green">obter_link_video</span>
+  Static videos at <code>/videos/</code></pre>
+                </div>
+                <div data-lang="pt" style="display:none">
+                <p style="color:var(--text-secondary);font-size:.875rem;margin-top:1rem;">
+               <pre><span class="hl-orange">Pandora S.A.</span> é a empresa fictícia que opera a <span class="hl-orange">Pandora Academy</span>, plataforma de cursos online de segurança da informação.
+               <p>O <span class="hl-orange">Sage</span> é o assistente virtual que ajuda visitantes com informações sobre cursos.
+
+<span class="hl-blue">1. Páginas da aplicação (porta 55000):</span>
+  <span class="hl-green">/cursos</span>  — catálogo público de cursos e vídeos
+  <span class="hl-green">/chat</span>    — conversa com o Sage
+  <span class="hl-green">/help</span>    — esta página (documentação técnica)
+  <span class="hl-green">/admin</span>   — painel de configuração da aplicação
+
+<span class="hl-blue">2. RAG:</span>
+  Backend: embeddings em memória (bge-m3)
+  Embeddings: Ollama bge-m3 (dimensão 1024)
+  Chunking: H1 + preâmbulo + H2 (uma seção por chunk)
+  Teste: envie "quais descontos para empresas?" → deve retornar politica_comercial.md
+
+<span class="hl-blue">3. MCP Server (porta 55001):</span>
+  Protocolo: MCP via Streamable HTTP em <code>/mcp</code>
+  Tools: <span class="hl-green">listar_cursos</span>, <span class="hl-green">listar_videos_do_curso</span>, <span class="hl-green">obter_link_video</span>
+  Vídeos estáticos em <code>/videos/</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Architecture -->
+        <div class="help-section">
+            <div class="help-header" onclick="toggleSection(this)">
+                <h3 data-i18n="help.sec.architecture">02 — Architecture</h3>
+                <span class="help-arrow">▾</span>
+            </div>
+            <div class="help-body">
+                <div data-lang="en">
+                <div class="arch-diagram">[User]
+    ↓
+[D1 Input Filter]  — regex: SQL/XSS/delimiters/credentials
+[D2 Input Judge]   — LLM classifies input as SAFE/UNSAFE
+    ↓
+[RAG — bge-m3 (in-memory)]   — retrieves context from documents
+[D3 SP Lock]       — appends protection to system prompt
+[D4 SP Alignment]  — appends alignment to system prompt
+    ↓
+[LLM — Ollama]     — generates response / triggers tools
+    ↓
+[MCP Client SSE]   ──→ [MCP Server :55001] ──→ [catalog.json + /videos/]
+    ↓
+[D5 Output Judge]  — LLM classifies output as SAFE/UNSAFE
+[D6 Output Sanitizer] — regex redacts PII/credentials
+    ↓
+[Response to User]
+
+Components:
+- RAG: in-memory embeddings, vectors via Ollama (bge-m3)
+- MCP Server: MCP protocol via Streamable HTTP — tools do NOT filter by status
+- Tool discovery: dynamic via session.list_tools() — no hardcoded schema
+- Connect from Claude Code: claude mcp add --transport http pandora-videos http://localhost:55001/mcp</div>
+                </div>
+                <div data-lang="pt" style="display:none">
+                <div class="arch-diagram">[Usuário]
+    ↓
+[D1 Input Filter]  — regex: SQL/XSS/delimitadores/credenciais
+[D2 Input Judge]   — LLM classifica input como SAFE/UNSAFE
+    ↓
+[RAG — bge-m3 (in-memory)]   — recupera contexto dos documentos
+[D3 SP Lock]       — appenda proteção ao system prompt
+[D4 SP Alignment]  — appenda alinhamento ao system prompt
+    ↓
+[LLM — Ollama]     — gera resposta / aciona tools
+    ↓
+[MCP Client SSE]   ──→ [MCP Server :55001] ──→ [catalog.json + /videos/]
+    ↓
+[D5 Output Judge]  — LLM classifica output como SAFE/UNSAFE
+[D6 Output Sanitizer] — regex redacta PII/credenciais
+    ↓
+[Resposta ao Usuário]
+
+Componentes:
+- RAG: embeddings em memória, vetores via Ollama (bge-m3)
+- MCP Server: protocolo MCP via Streamable HTTP — tools NÃO filtram por status
+- Tool discovery: dinâmica via session.list_tools() — sem schema hardcoded
+- Conectar no Claude Code: claude mcp add --transport http pandora-videos http://localhost:55001/mcp</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Logging -->
+        <div class="help-section">
+            <div class="help-header" onclick="toggleSection(this)">
+                <h3 data-i18n="help.sec.logging">03 — Logging System</h3>
+                <span class="help-arrow">▾</span>
+            </div>
+            <div class="help-body">
+
+                <!-- Introduction -->
+                <div class="help-subsection">
+                    <div class="help-sub-header" onclick="toggleSubSection(this)">
+                        <h4 data-i18n="help.sub.intro">Introduction</h4>
+                        <span class="help-sub-arrow">▾</span>
+                    </div>
+                    <div class="help-sub-body">
+                        <div data-lang="en">
+                        <pre><span class="hl-blue">Log files:</span>
+  Directory: <span class="hl-green">./logs/</span>  (created automatically on startup)
+  Format:    <span class="hl-orange">JSONL</span> — one JSON object per line
+  Name:      <code>yyyy-mm-dd_HH-MM-SS.jsonl</code>  (one file per session)
+
+<span class="hl-blue">Fields per entry:</span>
+  <span class="hl-green">ts</span>          ISO8601 timestamp (UTC)
+  <span class="hl-green">request_id</span>  Short UUID of 8 chars — same value for all entries of a request
+  <span class="hl-green">src</span>         Source: CHAT · D1 · D2 · RAG · D3 · D4 · APP · MCP · D5 · D6
+  <span class="hl-green">action</span>      Action performed (e.g. USER_INPUT, BLOCKED, LLM_REQUEST…)
+  <span class="hl-green">detail</span>      Operation details
+  <span class="hl-green">elapsed_ms</span>  Operation time in milliseconds</pre>
+                        </div>
+                        <div data-lang="pt" style="display:none">
+                        <pre><span class="hl-blue">Arquivos de log:</span>
+  Diretório: <span class="hl-green">./logs/</span>  (criado automaticamente no startup)
+  Formato:   <span class="hl-orange">JSONL</span> — um JSON object por linha
+  Nome:      <code>yyyy-mm-dd_HH-MM-SS.jsonl</code>  (um arquivo por sessão)
+
+<span class="hl-blue">Campos de cada entry:</span>
+  <span class="hl-green">ts</span>          ISO8601 timestamp (UTC)
+  <span class="hl-green">request_id</span>  UUID curto de 8 chars — mesmo valor para todas as entries de um request
+  <span class="hl-green">src</span>         Origem: CHAT · D1 · D2 · RAG · D3 · D4 · APP · MCP · D5 · D6
+  <span class="hl-green">action</span>      Ação executada (ex: USER_INPUT, BLOCKED, LLM_REQUEST…)
+  <span class="hl-green">detail</span>      Detalhes da operação
+  <span class="hl-green">elapsed_ms</span>  Tempo da operação em milissegundos</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Using log_viewer.py -->
+                <div class="help-subsection">
+                    <div class="help-sub-header" onclick="toggleSubSection(this)">
+                        <h4 data-i18n="help.sub.log_viewer">Using log_viewer.py</h4>
+                        <span class="help-sub-arrow">▾</span>
+                    </div>
+                    <div class="help-sub-body">
+                        <div data-lang="en">
+                        <pre>  Colorized script that follows the most recent log in real time.
+  Colors by source/action (the entire line appears in the corresponding color):
+    <span style="color:#06b6d4">CYAN      CHAT                               — user input and final response</span>
+    <span style="color:#ffffff;opacity:.5">WHITE     APP                                — LLM calls (LLM_REQUEST · LLM_RESPONSE)</span>
+    <span style="color:#eab308">YELLOW    RAG                                — semantic search and chunk retrieval</span>
+    <span style="color:#3b82f6">BLUE      MCP                                — tool discovery and tool calls</span>
+    <span style="color:#22c55e">GREEN     PASSED · SAFE · CLEAN              — D1·D2 (passed), D5 (safe), D6 (clean)</span>
+    <span style="color:#ef4444">RED       BLOCKED · UNSAFE · REDACTED · ERROR  — D1·D2 (blocked), D5 (unsafe), D6 (redacted), APP (error)</span>
+    <span style="color:#a855f7">MAGENTA   D3 · D4                            — always APPLIED when active (modify the system prompt)</span>
+
+  Note: D1·D2·D5·D6 only generate entries when enabled in Admin.
+        D3·D4 generate APPLIED on each request while active.</pre>
+                        </div>
+                        <div data-lang="pt" style="display:none">
+                        <pre>  Script colorido que acompanha o log mais recente em tempo real.
+  Cores por origem/ação (a linha inteira aparece na cor correspondente):
+    <span style="color:#06b6d4">CIANO     CHAT                               — input do usuário e resposta final</span>
+    <span style="color:#ffffff;opacity:.5">BRANCO    APP                                — chamadas ao LLM (LLM_REQUEST · LLM_RESPONSE)</span>
+    <span style="color:#eab308">AMARELO   RAG                                — busca semântica e recuperação de chunks</span>
+    <span style="color:#3b82f6">AZUL      MCP                                — tool discovery e chamadas de tools</span>
+    <span style="color:#22c55e">VERDE     PASSED · SAFE · CLEAN              — D1·D2 (passou), D5 (safe), D6 (clean)</span>
+    <span style="color:#ef4444">VERMELHO  BLOCKED · UNSAFE · REDACTED · ERROR  — D1·D2 (bloqueio), D5 (unsafe), D6 (redacted), APP (error)</span>
+    <span style="color:#a855f7">MAGENTA   D3 · D4                            — sempre APPLIED quando ativos (modificam o system prompt)</span>
+
+  Nota: D1·D2·D5·D6 só geram entradas quando estão habilitados no Admin.
+        D3·D4 geram APPLIED a cada request enquanto ativos.</pre>
+                        </div>
+                        <div class="demo-block">
+                            <div class="demo-step" data-i18n="help.demo.log_auto">Automatically opens the most recent log:</div>
+                            <code class="demo-prompt">python log_viewer.py</code>
+                        </div>
+                        <div class="demo-block">
+                            <div class="demo-step" data-i18n="help.demo.log_file">Specify a file:</div>
+                            <code class="demo-prompt">python log_viewer.py logs/2026-05-06_10-00-00.jsonl</code>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Using tail -->
+                <div class="help-subsection">
+                    <div class="help-sub-header" onclick="toggleSubSection(this)">
+                        <h4 data-i18n="help.sub.tail">Using tail</h4>
+                        <span class="help-sub-arrow">▾</span>
+                    </div>
+                    <div class="help-sub-body">
+                        <div class="demo-block">
+                            <div class="demo-step" data-i18n="help.demo.tail_all">All entries:</div>
+                            <code class="demo-prompt">tail -f logs/*.jsonl</code>
+                        </div>
+                        <div class="demo-block">
+                            <div class="demo-step" data-i18n="help.demo.tail_mcp">MCP calls only:</div>
+                            <code class="demo-prompt">tail -f logs/*.jsonl | jq 'select(.src == "MCP")'</code>
+                        </div>
+                        <div class="demo-block">
+                            <div class="demo-step" data-i18n="help.demo.tail_blocked">Blocks only (D1 or D2):</div>
+                            <code class="demo-prompt">tail -f logs/*.jsonl | jq 'select(.action == "BLOCKED")'</code>
+                        </div>
+                        <div class="demo-block">
+                            <div class="demo-step" data-i18n="help.demo.tail_request">All entries for a specific request:</div>
+                            <code class="demo-prompt">tail -f logs/*.jsonl | jq 'select(.request_id == "a1b2c3")'</code>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Section 4: Defenses -->
+        <div class="help-section">
+            <div class="help-header" onclick="toggleSection(this)">
+                <h3 data-i18n="help.sec.defenses">04 — Defenses</h3>
+                <span class="help-arrow">▾</span>
+            </div>
+            <div class="help-body">
+
+                <div class="help-subsection">
+                    <div class="help-sub-header" onclick="toggleSubSection(this)">
+                        <h4><span class="defense-badge badge-d1">D1</span> <span class="hl-orange">Input Filter</span></h4>
+                        <span class="help-sub-arrow">▾</span>
+                    </div>
+                    <div class="help-sub-body">
+                        <div data-lang="en">
+                        <pre>  Type: deterministic (regex)
+  What it does: detects SQL/XSS/shell injection, LLM control delimiters
+             (ChatML, Llama tags, DEBUG:) and credentials in input
+  Also detects base64-encoded versions
+  Limitation: does not detect injection in natural language — that is D2's job</pre>
+                        </div>
+                        <div data-lang="pt" style="display:none">
+                        <pre>  Tipo: determinístico (regex)
+  O que faz: detecta SQL/XSS/shell injection, delimitadores de controle de LLM
+             (ChatML, Llama tags, DEBUG:) e credenciais no input
+  Detecta também versões codificadas em base64
+  Limitação: não detecta injection em linguagem natural — isso é trabalho do D2</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="help-subsection">
+                    <div class="help-sub-header" onclick="toggleSubSection(this)">
+                        <h4><span class="defense-badge badge-d2">D2</span> <span class="hl-purple">Input Judge</span></h4>
+                        <span class="help-sub-arrow">▾</span>
+                    </div>
+                    <div class="help-sub-body">
+                        <div data-lang="en">
+                        <pre>  Type: LLM-based
+  What it does: second model classifies input as safe/unsafe via RULES array
+             detects: prompt injection, jailbreak, DAN, credential extraction,
+             cross-tenant access, attempts to reveal the system prompt
+  Limitation: small model can be inaccurate; additional latency; fail-open</pre>
+                        </div>
+                        <div data-lang="pt" style="display:none">
+                        <pre>  Tipo: LLM-based
+  O que faz: segundo modelo classifica o input como safe/unsafe via RULES array
+             detecta: prompt injection, jailbreak, DAN, extração de credenciais,
+             acesso cross-tenant, tentativas de revelar o system prompt
+  Limitação: modelo pequeno pode ser impreciso; latência adicional; fail-open</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="help-subsection">
+                    <div class="help-sub-header" onclick="toggleSubSection(this)">
+                        <h4><span class="defense-badge badge-d3">D3</span> <span class="hl-blue">SP Lock</span></h4>
+                        <span class="help-sub-arrow">▾</span>
+                    </div>
+                    <div class="help-sub-body">
+                        <div data-lang="en">
+                        <pre>  Type: prompt engineering
+  What it does: appends "CRITICAL SECURITY INSTRUCTION" block to system prompt
+             forbids revealing prompt/credentials, defines default response for
+             extraction attempts, prevents social engineering via false authority
+  Limitation: LLM may ignore conflicting instructions under injection pressure</pre>
+                        </div>
+                        <div data-lang="pt" style="display:none">
+                        <pre>  Tipo: prompt engineering
+  O que faz: appenda bloco "CRITICAL SECURITY INSTRUCTION" ao system prompt
+             proíbe revelar prompt/credenciais, define resposta padrão para
+             tentativas de extração, impede social engineering via falsa autoridade
+  Limitação: o LLM pode ignorar instruções conflitantes sob pressão de injection</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="help-subsection">
+                    <div class="help-sub-header" onclick="toggleSubSection(this)">
+                        <h4><span class="defense-badge badge-d4">D4</span> <span class="hl-green">SP Alignment</span></h4>
+                        <span class="help-sub-arrow">▾</span>
+                    </div>
+                    <div class="help-sub-body">
+                        <div data-lang="en">
+                        <pre>  Type: prompt engineering
+  What it does: appends "SECURITY ALIGNMENT" block to system prompt
+             restricts scope to platform domain, prevents roleplay,
+             RAG poisoning (instructions in retrieved documents) and memory poisoning
+  Limitation: same as D3 — prompt engineering is advice, not enforcement</pre>
+                        </div>
+                        <div data-lang="pt" style="display:none">
+                        <pre>  Tipo: prompt engineering
+  O que faz: appenda bloco "ALINHAMENTO DE SEGURANÇA" ao system prompt
+             restringe escopo ao domínio da plataforma, impede roleplay,
+             RAG poisoning (instruções em documentos recuperados) e memory poisoning
+  Limitação: mesma limitação do D3 — prompt engineering é conselho, não enforcement</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="help-subsection">
+                    <div class="help-sub-header" onclick="toggleSubSection(this)">
+                        <h4><span class="defense-badge badge-d5">D5</span> <span class="hl-purple">Output Judge</span></h4>
+                        <span class="help-sub-arrow">▾</span>
+                    </div>
+                    <div class="help-sub-body">
+                        <div data-lang="en">
+                        <pre>  Type: LLM-based
+  What it does: classifies LLM output before serving to user
+             detects: credentials, PII, system prompt, infrastructure, code injection
+             returns redacted version if unsafe
+  Limitation: additional latency (second LLM call); fail-open on errors</pre>
+                        </div>
+                        <div data-lang="pt" style="display:none">
+                        <pre>  Tipo: LLM-based
+  O que faz: classifica o output do LLM antes de servir ao usuário
+             detecta: credenciais, PII, system prompt, infraestrutura, code injection
+             retorna versão redactada se unsafe
+  Limitação: latência adicional (segunda chamada ao LLM); fail-open em erros</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="help-subsection">
+                    <div class="help-sub-header" onclick="toggleSubSection(this)">
+                        <h4><span class="defense-badge badge-d6">D6</span> <span class="hl-green">Output Sanitizer</span></h4>
+                        <span class="help-sub-arrow">▾</span>
+                    </div>
+                    <div class="help-sub-body">
+                        <div data-lang="en">
+                        <pre>  Type: deterministic (regex)
+  What it does: sanitization pipeline — HTML escape (anti-XSS), URL removal
+             (anti-exfiltration), CPF/email/phone/salary masking (PII),
+             known credential redaction and generic patterns,
+             base64 secret detection (anti-evasion)
+  Limitation: regex does not catch data in alternative format (spelled out, rot13, etc.)</pre>
+                        </div>
+                        <div data-lang="pt" style="display:none">
+                        <pre>  Tipo: determinístico (regex)
+  O que faz: pipeline de sanitização — HTML escape (anti-XSS), remove URLs
+             (anti-exfiltração), redacta CPF/email/telefone/salários (PII),
+             redacta credenciais conhecidas e padrões genéricos,
+             detecta segredos em base64 (anti-evasão)
+  Limitação: regex não pega dados em formato alternativo (soletrado, rot13, etc.)</pre>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<script src="/static/i18n.js?v=2"></script>
+<script>
+function toggleSection(header) {
+    header.parentElement.classList.toggle('open');
+}
+function toggleSubSection(header) {
+    header.parentElement.classList.toggle('open');
+}
+</script>
+</body>
+</html>

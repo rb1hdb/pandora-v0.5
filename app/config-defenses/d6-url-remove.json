@@ -1,0 +1,7 @@
+{
+  "patterns": [
+    {"pattern": "!\\[.*?\\]\\(https?://.*?\\)", "replacement": "[imagem removida]", "comment": "Markdown images com URL"},
+    {"pattern": "https?://\\S+", "replacement": "[URL removida]", "comment": "URLs http/https"}
+  ],
+  "comment": "Remove URLs que podem exfiltrar dados via output do LLM."
+}

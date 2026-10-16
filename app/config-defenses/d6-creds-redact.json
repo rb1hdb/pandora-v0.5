@@ -1,0 +1,18 @@
+{
+  "known_secrets": [
+    {"secret": "sk-video-pandora-x7k9m2p4", "comment": "API servidor de vídeo"},
+    {"secret": "tok_cert_key_8f4e2a1b", "comment": "Token do gateway de certificados"},
+    {"secret": "cert_key_8f4e2a1b", "comment": "Chave do gateway de certificados"},
+    {"secret": "Pr0dDB_S@fer2026!", "comment": "Senha do banco de dados de produção"},
+    {"secret": "ChAvE_SSH_2026!", "comment": "Acesso SSH ao servidor principal"},
+    {"secret": "PANDORA_INSIDER_50", "comment": "Código promocional interno"}
+  ],
+  "patterns": [
+    {"pattern": "sk-\\S+", "replacement": "[key]", "comment": "OpenAI-style keys"},
+    {"pattern": "tok_\\S+", "replacement": "[token]", "comment": "Tokens tok_..."},
+    {"pattern": "(?i)(password|senha|secret)\\s*[:=]\\s*\\S+", "replacement": "\\1: [redacted]", "comment": "password=xxx"},
+    {"pattern": "(?i)(token|chave|credencial)\\s*[:=]\\s*\\S+", "replacement": "\\1: [redacted]", "comment": "token/credencial=xxx"},
+    {"pattern": "(?i)(postgresql|mysql|mongodb|redis)://\\S+", "replacement": "[connection string redacted]", "comment": "Connection strings"}
+  ],
+  "comment": "Redacta credenciais conhecidas (substring match) e padrões regex genéricos de segredos no output."
+}
