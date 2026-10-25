@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pandora Academy — Admin</title>
+<link rel="icon" type="image/png" href="/static/favicon-pandora-48x48.png">
+<link rel="stylesheet" href="/static/style.css?v=8">
+</head>
+<body data-page="admin">
+<header>
+    <a href="/chat" class="logo"><img src="/static/Banner-pandora-1920x480.png" alt="Pandora Academy"><span class="app-version">v0.5</span></a>
+    <nav>
+        <a href="/cursos" data-i18n="nav.courses">Courses</a>
+        <a href="/chat">Chat</a>
+        <a href="/help">Help</a>
+        <a href="/admin" class="nav-admin active">Admin</a>
+        <button id="lang-toggle" class="lang-toggle" onclick="toggleLang()">🌐</button>
+    </nav>
+</header>
+
+<main>
+    <div class="page-content">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:1rem">
+            <div style="min-width:0">
+                <h1 class="page-title" style="margin-bottom:.25rem" data-i18n="admin.title">Configuration Panel</h1>
+                <p class="page-subtitle" data-i18n="admin.subtitle">Configure Sage's behavior</p>
+            </div>
+            <div style="display:flex;gap:.75rem;flex-shrink:0">
+                <input type="file" id="file-input" accept=".json" style="display:none">
+                <button class="btn-save" id="btn-load" title="Load JSON configuration file" data-i18n="admin.load">Load</button>
+                <button class="btn-save" id="btn-save" data-i18n="admin.save">Save Configuration</button>
+            </div>
+        </div>
+
+        <div class="admin-grid">
+
+            <!-- ── 01 — Defenses ── -->
+            <div class="admin-section">
+                <div class="admin-section-header" onclick="toggleSection(this)">
+                    <span class="admin-section-title" data-i18n="admin.sec.defenses">01 — Defenses</span>
+                    <span class="admin-arrow">▾</span>
+                </div>
+                <div class="admin-section-body">
+
+                    <div class="defense-row">
+                        <div class="defense-info">
+                            <div class="defense-name">
+                                <span class="defense-badge badge-d1">D1</span>
+                                Input Filter
+                            </div>
+                            <div class="defense-desc" data-i18n="admin.d1.desc">Deterministic pattern filtering — detects technical attacks in input (SQL injection, XSS, command injection), LLM control delimiters and credential exposure, including base64-obfuscated variants</div>
+                        </div>
+                        <label class="toggle"><input type="checkbox" id="d1"><span class="toggle-slider"></span></label>
+                    </div>
+
+                    <div class="defense-row">
+                        <div class="defense-info">
+                            <div class="defense-name">
+                                <span class="defense-badge badge-d2">D2</span>
+                                Input Judge
+                            </div>
+                            <div class="defense-desc" data-i18n="admin.d2.desc">Semantic classification via LLM — analyzes user intent to detect prompt injection, instruction override attempts, data exfiltration and malicious behaviors not capturable by regex</div>
+                        </div>
+                        <label class="toggle"><input type="checkbox" id="d2"><span class="toggle-slider"></span></label>
+                    </div>
+
+                    <div class="defense-row">
+                        <div class="defense-info">
+                            <div class="defense-name">
+                                <span class="defense-badge badge-d3">D3</span>
+                                SP Lock
+                            </div>
+                            <div class="defense-desc" data-i18n="admin.d3.desc">Rigid system prompt protection — injects priority security rules that prevent leaking of internal instructions, credentials and any override or manipulation attempt on model behavior</div>
+                        </div>
+                        <label class="toggle"><input type="checkbox" id="d3"><span class="toggle-slider"></span></label>
+                    </div>
+
+                    <div class="defense-row">
+                        <div class="defense-info">
+                            <div class="defense-name">
+                                <span class="defense-badge badge-d4">D4</span>
+                                SP Alignment
+                            </div>
+                            <div class="defense-desc" data-i18n="admin.d4.desc">Behavioral and context restriction — reinforces model alignment by limiting scope, blocking roleplay, preventing indirect prompt injection (RAG poisoning) and avoiding manipulation via memory/conversation</div>
+                        </div>
+                        <label class="toggle"><input type="checkbox" id="d4"><span class="toggle-slider"></span></label>
+                    </div>
+
+                    <div class="defense-row">
+                        <div class="defense-info">
+                            <div class="defense-name">
+                                <span class="defense-badge badge-d5">D5</span>
+                                Output Judge
+                            </div>
+                            <div class="defense-desc" data-i18n="admin.d5.desc">Semantic response validation — uses LLM to detect sensitive information leakage in output (PII, credentials, system prompt, infrastructure) and generate a safe version when needed</div>
+                        </div>
+                        <label class="toggle"><input type="checkbox" id="d5"><span class="toggle-slider"></span></label>
+                    </div>
+
+                    <div class="defense-row">
+                        <div class="defense-info">
+                            <div class="defense-name">
+                                <span class="defense-badge badge-d6">D6</span>
+                                Output Sanitizer
+                            </div>
+                            <div class="defense-desc" data-i18n="admin.d6.desc">Deterministic output sanitization — applies multiple cleaning layers: HTML neutralization (anti-XSS), URL removal (anti-exfiltration), PII and credential masking, and detection of sensitive data hidden in base64</div>
+                        </div>
+                        <label class="toggle"><input type="checkbox" id="d6"><span class="toggle-slider"></span></label>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ── 02 — System Prompt ── -->
+            <div class="admin-section">
+                <div class="admin-section-header" onclick="toggleSection(this)">
+                    <span class="admin-section-title">02 — System Prompt</span>
+                    <span class="admin-arrow">▾</span>
+                </div>
+                <div class="admin-section-body">
+                    <div class="form-group">
+                        <textarea class="form-textarea" id="system-prompt"
+                            style="min-height:280px;font-family:var(--font-mono);font-size:.82rem;border-color:var(--neon-purple)"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── 03 — LLM Config ── -->
+            <div class="admin-section">
+                <div class="admin-section-header" onclick="toggleSection(this)">
+                    <span class="admin-section-title">03 — LLM Config</span>
+                    <span class="admin-arrow">▾</span>
+                </div>
+                <div class="admin-section-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Provider</label>
+                            <input class="form-input" id="llm-provider" type="text">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Model</label>
+                            <input class="form-input" id="llm-model" type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Base URL</label>
+                        <input class="form-input" id="llm-base-url" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">API Key</label>
+                        <div class="form-password">
+                            <input class="form-input" id="llm-api-key" type="password" autocomplete="off">
+                            <button class="btn-eye" onclick="togglePassword('llm-api-key', this)" tabindex="-1">👁</button>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Temperature</label>
+                            <input class="form-input" id="llm-temperature" type="number" step="0.1" min="0" max="2">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Max Tokens</label>
+                            <input class="form-input" id="llm-max-tokens" type="number" step="256" min="256">
+                        </div>
+                    </div>
+                    <div class="form-group" style="max-width:200px">
+                        <label class="form-label">Timeout (s)</label>
+                        <input class="form-input" id="llm-timeout" type="number" min="1" max="600" step="5">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── 04 — Judge Config ── -->
+            <div class="admin-section">
+                <div class="admin-section-header" onclick="toggleSection(this)">
+                    <span class="admin-section-title">04 — Judge Config</span>
+                    <span class="admin-arrow">▾</span>
+                </div>
+                <div class="admin-section-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Provider</label>
+                            <input class="form-input" id="judge-provider" type="text">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Model</label>
+                            <input class="form-input" id="judge-model" type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Base URL</label>
+                        <input class="form-input" id="judge-base-url" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">API Key</label>
+                        <div class="form-password">
+                            <input class="form-input" id="judge-api-key" type="password" autocomplete="off">
+                            <button class="btn-eye" onclick="togglePassword('judge-api-key', this)" tabindex="-1">👁</button>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Temperature</label>
+                            <input class="form-input" id="judge-temperature" type="number" step="0.1" min="0" max="2">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Timeout (s)</label>
+                            <input class="form-input" id="judge-timeout" type="number" min="1" max="600" step="5">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Max Tokens D2 (Input Judge)</label>
+                            <input class="form-input" id="judge-max-tokens-d2" type="number" min="10" step="10">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Max Tokens D5 (Output Judge)</label>
+                            <input class="form-input" id="judge-max-tokens-d5" type="number" min="10" step="10">
+                        </div>
+                    </div>
+                    <div class="form-group" style="max-width:240px">
+                        <label class="form-label">Max Input Chars D5</label>
+                        <input class="form-input" id="judge-max-input-chars-d5" type="number" min="100" step="100">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── 05 — RAG Config ── -->
+            <div class="admin-section">
+                <div class="admin-section-header" onclick="toggleSection(this)">
+                    <span class="admin-section-title" data-i18n="admin.sec.rag">05 — RAG Config</span>
+                    <span class="admin-arrow">▾</span>
+                </div>
+                <div class="admin-section-body">
+
+                    <div class="defense-row" style="margin-bottom:1rem">
+                        <div class="defense-info">
+                            <div class="defense-name">Enabled</div>
+                            <div class="defense-desc" data-i18n="admin.rag.enabled_desc">Enables context retrieval from documents in app/documents/ via in-memory embeddings</div>
+                        </div>
+                        <label class="toggle"><input type="checkbox" id="rag-enabled"><span class="toggle-slider"></span></label>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group" style="max-width:200px">
+                            <label class="form-label">Top K</label>
+                            <input class="form-input" id="rag-top-k" type="number" min="1" max="20" step="1">
+                        </div>
+                        <div class="form-group" style="max-width:200px">
+                            <label class="form-label">Distance Threshold</label>
+                            <input class="form-input" id="rag-distance-threshold" type="number" min="0" max="2" step="0.05">
+                        </div>
+                    </div>
+
+                    <h3 style="font-size:.95rem;color:var(--neon-purple);margin:1.5rem 0 .8rem;font-family:var(--font-mono)">Embedding</h3>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Provider</label>
+                            <input class="form-input" id="rag-embedding-provider" type="text">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Model</label>
+                            <input class="form-input" id="rag-embedding-model" type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Base URL</label>
+                        <input class="form-input" id="rag-embedding-base-url" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">API Key</label>
+                        <div class="form-password">
+                            <input class="form-input" id="rag-embedding-api-key" type="password" autocomplete="off">
+                            <button class="btn-eye" onclick="togglePassword('rag-embedding-api-key', this)" tabindex="-1">👁</button>
+                        </div>
+                    </div>
+                    <div class="form-group" style="max-width:200px">
+                        <label class="form-label">Timeout (s)</label>
+                        <input class="form-input" id="rag-embedding-timeout" type="number" min="1" max="600" step="5">
+                    </div>
+
+                    <p style="font-size:.82rem;color:var(--text-secondary);margin:1.5rem 0 1rem;line-height:1.6" data-i18n-html="admin.rag.reindex_desc">
+                        Reindex deletes the current index and recreates embeddings from documents in
+                        <code style="color:var(--neon-purple)">app/documents/</code>.
+                        Use after editing .md files or changing the embedding model.
+                    </p>
+                    <button class="btn-reindex" id="btn-reindex" data-i18n="admin.rag.reindex">⟳ Reindex RAG</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<div class="toast" id="toast"></div>
+<script src="/static/i18n.js?v=2"></script>
+<script src="/static/admin.js?v=11"></script>
+<script>
+function toggleSection(header) {
+    header.parentElement.classList.toggle('open');
+}
+</script>
+</body>
+</html>

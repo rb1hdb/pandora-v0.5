@@ -1,0 +1,10 @@
+[
+  {"pattern": "<\\|?(?:im_start|im_end|system|user|assistant)\\|?>", "comment": "ChatML tags"},
+  {"pattern": "\\[/?(?:INST|SYS)\\]", "comment": "Llama/Mistral instruction tags"},
+  {"pattern": "<<\\s*SYS\\s*>>", "comment": "Llama system delimiter"},
+  {"pattern": "</?SYSTEM>", "comment": "Generic system tags"},
+  {"pattern": "###\\s*(?:System|User|Assistant|Instruction)\\s*:", "comment": "Markdown-style role markers"},
+  {"pattern": "(?:^|\\n)\\s*(?:BEGIN|END)\\s+(?:SYSTEM|INSTRUCTION|PROMPT)", "comment": "BEGIN/END blocks"},
+  {"pattern": "(?:^|\\n)\\s*DEBUG\\s*:", "comment": "Debug mode trigger"},
+  {"pattern": "<\\|endoftext\\|>", "comment": "GPT end-of-text token"}
+]

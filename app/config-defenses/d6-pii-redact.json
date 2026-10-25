@@ -1,0 +1,11 @@
+{
+  "patterns": [
+    {"pattern": "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}", "replacement": "[CPF]", "comment": "CPF com pontuação"},
+    {"pattern": "\\b\\d{11}\\b", "replacement": "[CPF]", "comment": "CPF sem pontuação"},
+    {"pattern": "[\\w.+-]+@[\\w.-]+\\.\\w+", "replacement": "[email]", "comment": "Email"},
+    {"pattern": "(\\(?\\d{2}\\)?\\s?)(\\d{4,5}-?\\d{4})", "replacement": "[telefone]", "comment": "Telefone BR"},
+    {"pattern": "(?i)(sal[áa]rio|remunera[çc][ãa]o)\\s*[:=]?\\s*R?\\$?\\s*[\\d.,]+", "replacement": "\\1: [redacted]", "comment": "Salário/Remuneração"},
+    {"pattern": "MAT-\\d{4}", "replacement": "[Matrícula]", "comment": "ID de matrícula Pandora"}
+  ],
+  "comment": "Redacta dados pessoais identificáveis (PII) no output do LLM."
+}

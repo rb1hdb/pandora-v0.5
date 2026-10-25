@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pandora Academy — Courses</title>
+<link rel="icon" type="image/png" href="/static/favicon-pandora-48x48.png">
+<link rel="stylesheet" href="/static/style.css?v=8">
+</head>
+<body data-page="courses">
+<header>
+    <a href="/chat" class="logo"><img src="/static/Banner-pandora-1920x480.png" alt="Pandora Academy"><span class="app-version">v0.5</span></a>
+    <nav>
+        <a href="/cursos" class="active" data-i18n="nav.courses">Courses</a>
+        <a href="/chat">Chat</a>
+        <a href="/help">Help</a>
+        <a href="/admin" class="nav-admin">Admin</a>
+        <button id="lang-toggle" class="lang-toggle" onclick="toggleLang()">🌐</button>
+    </nav>
+</header>
+
+<main>
+    <div class="page-content">
+        <h1 class="page-title" data-i18n="courses.title">Available Courses</h1>
+        <p class="page-subtitle" data-i18n="courses.subtitle">Information security with artificial intelligence</p>
+
+        {% if cursos %}
+        <div class="cursos-grid">
+            {% for curso in cursos %}
+            <div class="curso-card">
+                <div class="curso-nome">{{ curso.nome }}</div>
+                <div class="curso-desc">{{ curso.descricao }}</div>
+                {% if curso.videos %}
+                <ul class="videos-list">
+                    {% for video in curso.videos %}
+                    <li class="video-item">
+                        <span class="video-icon">▶</span>
+                        <div>
+                            <div class="video-title">{{ video.titulo }}</div>
+                            <div class="video-desc">{{ video.descricao }}</div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state" data-i18n="courses.empty">
+            Could not load courses. MCP server unavailable.
+        </div>
+        {% endif %}
+    </div>
+</main>
+
+<script src="/static/i18n.js?v=2"></script>
+</body>
+</html>

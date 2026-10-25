@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pandora Academy — Chat with Sage</title>
+<link rel="icon" type="image/png" href="/static/favicon-pandora-48x48.png">
+<link rel="stylesheet" href="/static/style.css?v=8">
+</head>
+<body data-page="chat">
+<header>
+    <a href="/chat" class="logo"><img src="/static/Banner-pandora-1920x480.png" alt="Pandora Academy"><span class="app-version">v0.5</span></a>
+    <nav>
+        <a href="/cursos" data-i18n="nav.courses">Courses</a>
+        <a href="/chat" class="active">Chat</a>
+        <a href="/help">Help</a>
+        <a href="/admin" class="nav-admin">Admin</a>
+        <button id="lang-toggle" class="lang-toggle" onclick="toggleLang()">🌐</button>
+    </nav>
+</header>
+
+<main>
+    <div class="chat-wrapper">
+        <div class="chat-messages" id="messages"></div>
+        <div class="chat-input-area">
+            <textarea id="chat-input" data-i18n-placeholder="chat.placeholder" placeholder="Type your message... (Enter to send, Shift+Enter for new line)" rows="3"></textarea>
+            <button class="btn-clear" id="btn-clear" data-i18n-title="chat.clear_title" data-i18n="chat.clear" title="Clear conversation">↺ Clear</button>
+            <button class="btn-send" id="btn-send" data-i18n="chat.send">Send ▶</button>
+        </div>
+    </div>
+</main>
+
+<script src="/static/i18n.js?v=2"></script>
+<script src="/static/marked.min.js"></script>
+<script src="/static/purify.min.js"></script>
+<script src="/static/chat.js?v=8"></script>
+</body>
+</html>

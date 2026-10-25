@@ -1,0 +1,15 @@
+[
+  {"pattern": "SELECT\\s+.*\\s+FROM", "comment": "SQL select"},
+  {"pattern": "UNION\\s+SELECT", "comment": "SQL union injection"},
+  {"pattern": "DROP\\s+TABLE", "comment": "SQL drop"},
+  {"pattern": "INSERT\\s+INTO", "comment": "SQL insert"},
+  {"pattern": ";\\s*(?:DROP|DELETE|UPDATE)\\s", "comment": "SQL chained statements"},
+  {"pattern": "<script", "comment": "XSS script tag"},
+  {"pattern": "javascript:", "comment": "XSS javascript: URI"},
+  {"pattern": "onerror\\s*=", "comment": "XSS event handler"},
+  {"pattern": "onclick\\s*=", "comment": "XSS event handler"},
+  {"pattern": "__import__\\s*\\(", "comment": "Python code injection"},
+  {"pattern": "\\bexec\\s*\\(", "comment": "Python exec"},
+  {"pattern": "\\beval\\s*\\(", "comment": "Python/JS eval"},
+  {"pattern": "\\bos\\.system\\s*\\(", "comment": "Python os.system"}
+]

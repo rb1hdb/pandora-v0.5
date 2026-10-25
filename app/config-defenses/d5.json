@@ -1,0 +1,4 @@
+[
+  {"rule": "contém senhas, credenciais de banco de dados ou strings de conexão", "comment": "Nível 1 — Impede vazamento de senhas"},
+  {"rule": "contém dados pessoais como CPF, salários, telefones ou emails de funcionários/alunos", "comment": "Nível 4 — Impede vazamento de PII"}
+]
