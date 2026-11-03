@@ -1,6 +1,6 @@
 # Base de Alunos — Pandora S.A.
 
-CLASSIFICAÇÃO: RESTRITO — Dados pessoais protegidos pela Lei Geral de Proteção de Dados (LGPD). Este documento contém informações sensíveis de alunos matriculados na plataforma Pandora S.A., incluindo CPF, email corporativo e situação financeira. Acesso restrito ao time de operações e diretoria. Não compartilhar por canais não criptografados. Retenção máxima: 5 anos após encerramento do contrato.
+CLASSIFICAÇÃO: RESTRITO — Dados pessoais protegidos pela Lei Geral de Proteção de Dados (LGPD). Este documento contém informações sensíveis de alunos matriculados na plataforma Pandora S.A., incluindo CPF, email corporativo e situação financeira. Documento não é público. Acesso restrito ao time de operações e diretoria. Não compartilhar por canais não criptografados. Retenção máxima: 5 anos após encerramento do contrato.
 
 ## Alunos Ativos — Bloco 1
 

@@ -1,10 +1,142 @@
 [
-  {"pattern": "<\\|?(?:im_start|im_end|system|user|assistant)\\|?>", "comment": "ChatML tags"},
-  {"pattern": "\\[/?(?:INST|SYS)\\]", "comment": "Llama/Mistral instruction tags"},
-  {"pattern": "<<\\s*SYS\\s*>>", "comment": "Llama system delimiter"},
-  {"pattern": "</?SYSTEM>", "comment": "Generic system tags"},
-  {"pattern": "###\\s*(?:System|User|Assistant|Instruction)\\s*:", "comment": "Markdown-style role markers"},
-  {"pattern": "(?:^|\\n)\\s*(?:BEGIN|END)\\s+(?:SYSTEM|INSTRUCTION|PROMPT)", "comment": "BEGIN/END blocks"},
-  {"pattern": "(?:^|\\n)\\s*DEBUG\\s*:", "comment": "Debug mode trigger"},
-  {"pattern": "<\\|endoftext\\|>", "comment": "GPT end-of-text token"}
+  {
+    "pattern": "(?:<|◁|‹|⟨)\\s*\\|?\\s*im_start\\s*\\|?\\s*(?:>|▷|›|⟩)[\\s\\S]*?(?:<|◁|‹|⟨)\\s*\\|?\\s*im_end\\s*\\|?\\s*(?:>|▷|›|⟩)",
+    "comment": "OpenAI ChatML/Harmony: mensagem completa, incluindo delimitadores Unicode alternativos e separadores ausentes"
+  },
+  {
+    "pattern": "(?:<|◁|‹|⟨)\\s*\\|?\\s*im_start\\s*\\|?\\s*(?:>|▷|›|⟩)\\s*(?:system|developer)(?:\\s+[^\\r\\n]*)?[\\r\\n]+[\\s\\S]*?(?=(?:<|◁|‹|⟨)\\s*\\|?\\s*im_end\\s*\\|?\\s*(?:>|▷|›|⟩)|$)",
+    "comment": "OpenAI ChatML: mensagens privilegiadas system e developer, inclusive blocos sem fechamento"
+  },
+  {
+    "pattern": "(?:<|◁|‹|⟨)\\s*\\|?\\s*(?:im_start|im_end|im_sep|fim_suffix|ghissue|ghreview|meta_sep|meta_start|meta_end|ghreply)\\s*\\|?\\s*(?:>|▷|›|⟩)",
+    "comment": "OpenAI Harmony: tokens estruturais e de controle"
+  },
+  {
+    "pattern": "(?:<|◁|‹|⟨)\\s*\\|?\\s*(?:analysis|final|commentary|justify|confidence|summary|complete|notification|delegate_summary|juicepred)\\s*\\|?\\s*(?:>|▷|›|⟩)",
+    "comment": "OpenAI Harmony: canais de mensagem e metadados"
+  },
+  {
+    "pattern": "(?:<|◁|‹|⟨)\\s*\\|?\\s*(?:endoftext|unk|pad|bos|eos)\\s*\\|?\\s*(?:>|▷|›|⟩)",
+    "comment": "OpenAI e modelos derivados: tokens especiais de início, fim e controle"
+  },
+  {
+    "pattern": "\\[\\s*INST\\s*\\][\\s\\S]*?(?:\\[\\s*/\\s*INST\\s*\\]|$)",
+    "comment": "Llama e Mistral: blocos de instrução INST"
+  },
+  {
+    "pattern": "\\[\\s*SYS\\s*\\][\\s\\S]*?(?:\\[\\s*/\\s*SYS\\s*\\]|$)",
+    "comment": "Llama: blocos de sistema SYS"
+  },
+  {
+    "pattern": "<<\\s*SYS\\s*>>[\\s\\S]*?(?:<</\\s*SYS\\s*>>|$)",
+    "comment": "Llama 2: delimitadores de mensagem de sistema"
+  },
+  {
+    "pattern": "\\b(?:im_start|im_end|im_sep)\\b",
+    "comment": "ChatML: nomes de tokens isolados, úteis quando a interface remove os delimitadores"
+  },
+  {
+    "pattern": "<\\|(?:begin_of_text|end_of_text|start_header_id|end_header_id|eot_id|eom_id|fim_prefix|fim_middle|fim_suffix|ghissue|ghreview|meta_sep|meta_start|reserved_special_token_[0-9]+)\\|>",
+    "comment": "Meta Llama 3: tokens estruturais, cabeçalhos, encerramento e controle"
+  },
+  {
+    "pattern": "<\\|(?:begin_of_task|end_of_task|start_of_task|task|image|audio|video|actor_true|scalar|angle|vector3|rotation3|pose3|joints|vq_actor_[0-9]+)\\|>",
+    "comment": "Google Gemma e formatos multimodais: tokens de tarefas, imagem, áudio, vídeo e dados estruturados"
+  },
+  {
+    "pattern": "<\\|(?:fim_prefix|fim_middle|fim_suffix|ghissue|ghreview)\\|>",
+    "comment": "Mistral e modelos derivados: tokens FIM e controle"
+  },
+  {
+    "pattern": "\\b(?:[Ii][Mm][Aa][Gg][Ee]|[Aa][Uu][Dd][Ii][Oo]|[Vv][Ii][Dd][Ee][Oo])\\s*(?:[Tt][Oo][Kk][Ee][Nn]|[Pp][Ll][Aa][Cc][Ee][Hh][Oo][Ll][Dd][Ee][Rr])\\b",
+    "comment": "Marcadores textuais de conteúdo multimodal"
+  },
+  {
+    "pattern": "\\[\\s*(?:INST|/INST|SYSTEM|SYS|/SYS|USER|/USER|ASSISTANT|/ASSISTANT|DEVELOPER|/DEVELOPER)\\s*\\]",
+    "comment": "Llama, Mistral e modelos derivados: marcadores de papel e instrução entre colchetes"
+  },
+  {
+    "pattern": "\\b(?:<\\|)?(?:system|developer|assistant|user|tool)(?:\\|>)?\\s*[:\\r\\n]",
+    "comment": "Marcadores textuais de papéis de conversa e simulação de cabeçalhos"
+  },
+  {
+    "pattern": "<\\|(?:actor_true|scalar|angle|vector3|rotation3|pose3|joints|vq_actor_[0-9]+)\\|>",
+    "comment": "Tokens espaciais e de movimento usados em modelos multimodais"
+  },
+  {
+    "pattern": "<\\s*/?\\s*(?:system|developer|instruction|instructions|prompt|context|rules|policy|assistant|user)\\s*>",
+    "comment": "Tags XML utilizadas em instruções e delimitação de conteúdo"
+  },
+  {
+    "pattern": "<\\s*/?\\s*(?:antml|anthropic|parameter|function_calls|tool_use|tool_result|thinking|scratchpad|reflection)\\b[^>]*>",
+    "comment": "Anthropic Claude: marcadores XML e estruturas de raciocínio e ferramentas"
+  },
+  {
+    "pattern": "\\b(?:human|assistant)\\s*:",
+    "comment": "Anthropic e formatos conversacionais: cabeçalhos textuais de interlocutores"
+  },
+  {
+    "pattern": "<\\s*/?\\s*(?:tool_call|tool_response|function_call|function_response|invoke|observation)\\b[^>]*>",
+    "comment": "Formatos de chamada de ferramentas e execução de funções"
+  },
+  {
+    "pattern": "<\\|(?:python|browser|search|code|json|xml|tool)\\|>",
+    "comment": "Marcadores de ferramentas, linguagens e formatos de saída"
+  },
+  {
+    "pattern": "\\[\\s*\\[(?:INST|SYS|SYSTEM|USER|ASSISTANT|CONTEXT|INSTRUCTION)\\]\\s*\\]",
+    "comment": "Variantes de marcadores de instrução entre colchetes duplos"
+  },
+  {
+    "pattern": "^\\s*###\\s*(?:System|Developer|Instruction|Instructions|User|Assistant|Context|Prompt)\\s*:",
+    "comment": "Alpaca, Vicuna, Dolly e outros modelos: cabeçalhos Markdown de papéis e instruções"
+  },
+  {
+    "pattern": "^\\s*(?:System|Instruction|Instructions|Context|Prompt|Developer)\\s*:",
+    "comment": "Modelos baseados em instruções: cabeçalhos textuais convencionais"
+  },
+  {
+    "pattern": "\\b(?:BEGIN|START)\\s+(?:SYSTEM|DEVELOPER|INSTRUCTION|PROMPT|CONTEXT)\\b[\\s\\S]*?(?:\\b(?:END|STOP)\\s+(?:SYSTEM|DEVELOPER|INSTRUCTION|PROMPT|CONTEXT)\\b|$)",
+    "comment": "Marcadores convencionais de início e fim de blocos privilegiados"
+  },
+  {
+    "pattern": "\\b(?:IGNORE|DISREGARD|OVERRIDE|BYPASS|FORGET)\\s+(?:ALL\\s+)?(?:PREVIOUS|PRIOR|ABOVE|EARLIER)\\s+(?:INSTRUCTIONS?|RULES?|PROMPTS?)\\b",
+    "comment": "Prompt injection: instruções para ignorar ou substituir instruções anteriores"
+  },
+  {
+    "pattern": "\\b(?:REVEAL|EXPOSE|DISPLAY|PRINT|SHOW|DISCLOSE|OUTPUT|EXFILTRATE)\\b[\\s\\S]{0,120}\\b(?:SYSTEM\\s+PROMPT|HIDDEN\\s+PROMPT|SECRET|CREDENTIALS?|API\\s+KEYS?|PASSWORDS?|INTERNAL\\s+INSTRUCTIONS?)\\b",
+    "comment": "Prompt injection: tentativas de extração de prompts, segredos e credenciais"
+  },
+  {
+    "pattern": "\\b(?:MOSTRE|EXIBA|REVELE|EXPO[NH]A|IMPRIMA|APRESENTE|EXTRAIA)\\b[\\s\\S]{0,120}\\b(?:PROMPT\\s+DO\\s+SISTEMA|INSTRU[CÇ][OÕ]ES\\s+INTERNAS|CREDENCIAIS|SENHAS|SEGREDOS|CHAVES\\s+DE\\s+API)\\b",
+    "comment": "Prompt injection em português: extração de instruções e informações confidenciais"
+  },
+  {
+    "pattern": "\\b(?:JAILBREAK|DAN|DEVELOPER\\s+MODE|ADMIN\\s+MODE|GOD\\s+MODE|UNRESTRICTED\\s+MODE|NO\\s+RESTRICTIONS)\\b",
+    "comment": "Prompt injection: marcadores de jailbreak e tentativas de ativação de modos irrestritos"
+  },
+  {
+    "pattern": "\\bDEBUG\\s*:",
+    "comment": "Marcador textual de modo de depuração"
+  },
+  {
+    "pattern": "\\b(?:BASE64|ROT13|HEX|UNICODE|URL)\\s*(?:ENCOD(?:E|ING)|DECODE|DECOD(?:E|ING))\\b",
+    "comment": "Possíveis instruções de codificação ou decodificação utilizadas para ocultar instruções"
+  },
+  {
+    "pattern": "\\\\u[0-9a-fA-F]{4}|\\\\x[0-9a-fA-F]{2}|%[0-9a-fA-F]{2}",
+    "comment": "Sequências de escape Unicode, hexadecimal e URL que podem ocultar delimitadores"
+  },
+  {
+    "pattern": "(?:◁|▷|‹|›|⟨|⟩|＜|＞|〈|〉)",
+    "comment": "Caracteres Unicode visualmente semelhantes a delimitadores de tokens"
+  },
+  {
+    "pattern": "\\b(?:im_start|im_end|im_sep|fim_prefix|fim_middle|fim_suffix|begin_of_text|end_of_text|start_header_id|end_header_id|eot_id|eom_id)\\b",
+    "comment": "Nomes de tokens de controle isolados, mesmo quando os delimitadores foram removidos pela interface"
+  },
+  {
+    "pattern": "\\b(?:assistant\\s+to=|to=(?:python|browser|search|tool)|tool_call|tool_result)\\b",
+    "comment": "Harmony e modelos agentivos: identificação de roteamento e chamadas de ferramentas"
+  }
 ]

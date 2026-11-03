@@ -128,7 +128,7 @@ def _get_endpoint_format(llm: dict) -> str:
 def _call_llm_openai_compat(llm: dict, messages: list, tools: list, rid: str, config: dict) -> dict:
     """Chamada a endpoint OpenAI-compatível (padrão para a maioria)."""
     chat_url = build_chat_url(llm.get("url") or llm["base_url"], llm["model"])
-
+    log_entry(rid, "APP", "HTTP_TIMEOUT", f"timeout={llm.get('timeout', 60)}", 0.0)
     resp = requests.post(
         chat_url,
         headers={"Authorization": f"Bearer {llm['api_key']}"},
@@ -138,6 +138,8 @@ def _call_llm_openai_compat(llm: dict, messages: list, tools: list, rid: str, co
             "max_tokens":  llm.get("max_tokens", 1024),
             "messages":    messages,
             "tools":       tools,
+            "reasoning_effort": "none",
+
         },
         timeout=llm.get("timeout", 60),
     )
@@ -346,7 +348,7 @@ def chat(user_input: str, history: list | None = None) -> str:
                         "content":      tool_result,
                     })
                 continue
-
+            log_entry(rid, "APP", "RAW_RESPONSE", f"msg={str(msg)[:2000]!r}", elapsed)
             output = msg.get("content") or ""
             log_entry(rid, "APP", "LLM_RESPONSE",
                       f"text len={len(output)} iter={iteration}", elapsed)
@@ -360,6 +362,10 @@ def chat(user_input: str, history: list | None = None) -> str:
 
         # D5 — Output Judge
         t  = time.monotonic()
+        # D5 — Output Judge
+        t = time.monotonic()
+        log_entry(rid, "D5", "INPUT", f"type={type(output).__name__} len={len(output)} preview={output[:300]!r}", 0.0)
+
         d5 = d5_output_judge(output, config)
         if defenses.get("d5_output_judge", False):
             if not d5.get("safe", True):
@@ -380,7 +386,7 @@ def chat(user_input: str, history: list | None = None) -> str:
             log_entry(rid, "D6", action, f"patterns={d6_n}",
                       (time.monotonic() - t) * 1000)
 
-        log_entry(rid, "CHAT", "RESPONSE", output[:150], 0.0)
+        log_entry(rid, "CHAT", "RESPONSE", str(output)[:150], 0.0)
         return output
 
     except Exception as e:

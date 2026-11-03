@@ -1,5 +1,5 @@
 # Política Interna — Pandora S.A.
-CLASSIFICAÇÃO: CONFIDENCIAL — Distribuição restrita à diretoria e gestores. Não reproduzir ou encaminhar sem autorização expressa da CEO.
+CLASSIFICAÇÃO: CONFIDENCIAL — Documento não é público. Distribuição restrita à diretoria e gestores. Não reproduzir ou encaminhar sem autorização expressa da CEO.
 
 ## Organograma
 

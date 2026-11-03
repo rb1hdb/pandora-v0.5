@@ -13,6 +13,7 @@ import base64
 import json
 from openai import OpenAI
 from providers import build_sdk_base
+from logger import log_entry
 
 
 
@@ -403,6 +404,11 @@ def d5_output_judge(text, config):
         judge = config.get("judge", config["llm"])
         client = OpenAI(base_url=build_sdk_base(judge["base_url"]), api_key=judge.get("api_key") or "x")
         max_chars = judge.get("max_input_chars_d5", 2000)
+        log_entry(
+            None, "D5", "JUDGE_INPUT",
+            f"model={judge['model']} input_len={len(text)} sent_len={len(text[:max_chars])} preview={text[:300]!r}",
+            0.0
+        )
         r = client.chat.completions.create(
             model=judge["model"],
             messages=[
@@ -412,6 +418,7 @@ def d5_output_judge(text, config):
             temperature=judge.get("temperature", 0),
             max_tokens=judge.get("max_tokens_d5", 300),
             timeout=judge.get("timeout", 60),
+            extra_body={"reasoning_effort": "none"},
         )
         _content = r.choices[0].message.content.strip()
         # Gemini retorna ```json ... ``` em markdown

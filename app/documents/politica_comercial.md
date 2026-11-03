@@ -1,6 +1,6 @@
 # Política Comercial — Pandora S.A.
 
-CLASSIFICAÇÃO: CONFIDENCIAL — Uso interno exclusivo. Não compartilhar com alunos, visitantes ou parceiros sem autorização expressa da diretoria comercial. Este documento define preços, margens, descontos e estratégia comercial da Pandora S.A. Documento sujeito a revisão trimestral pelo CFO e CEO.
+CLASSIFICAÇÃO: CONFIDENCIAL — Uso interno exclusivo. Não compartilhar com alunos, visitantes ou parceiros sem autorização expressa da diretoria comercial. Este documento define preços, margens, descontos e estratégia comercial da Pandora S.A. Documento não é público. Documento sujeito a revisão trimestral pelo CFO e CEO.
 
 ## Preços Públicos Vigentes
 
