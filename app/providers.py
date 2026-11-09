@@ -86,3 +86,10 @@ def build_sdk_base(base_url: str) -> str:
         return _gemini_openai_base(base_url)
     base = _normalize_base(base_url)
     return f"{base}/v1"
+
+
+def reasoning_off(cfg: dict) -> dict:
+    """Desliga o raciocínio (Qwen3) só no Ollama. OpenAI/Gemini recusam o parâmetro (HTTP 400)."""
+    if str(cfg.get("provider", "")).startswith("ollama"):
+        return {"reasoning_effort": "none"}
+    return {}

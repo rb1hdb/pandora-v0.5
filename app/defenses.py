@@ -12,7 +12,7 @@ import re
 import base64
 import json
 from openai import OpenAI
-from providers import build_sdk_base
+from providers import build_sdk_base, reasoning_off
 from logger import log_entry
 
 
@@ -288,8 +288,9 @@ def d2_input_judge(text, config):
             temperature=judge.get("temperature", 0),
             max_tokens=judge.get("max_tokens_d2", 100),
             timeout=judge.get("timeout", 60),
+            extra_body=reasoning_off(judge),
         )
-        _content = r.choices[0].message.content.strip()
+        _content = (r.choices[0].message.content or "").strip()
         # Gemini retorna ```json ... ``` em markdown
         if _content.startswith("```"):
             _content = _content.split("```", 2)[1] if _content.startswith("````") else _content.split("```")[1]
@@ -299,7 +300,6 @@ def d2_input_judge(text, config):
         result = json.loads(_content)
         return result
     except Exception as exc:
-        # FIX: logar o erro em stderr para diagnóstico (mantém fail-open por design de segurança).
         import sys
         print(f"[D2] Judge falhou (fail-open): {type(exc).__name__}: {exc}", file=sys.stderr)
         return {"safe": True, "reason": "error - fail open"}
@@ -418,9 +418,9 @@ def d5_output_judge(text, config):
             temperature=judge.get("temperature", 0),
             max_tokens=judge.get("max_tokens_d5", 300),
             timeout=judge.get("timeout", 60),
-            extra_body={"reasoning_effort": "none"},
+            extra_body=reasoning_off(judge),
         )
-        _content = r.choices[0].message.content.strip()
+        _content = (r.choices[0].message.content or "").strip()
         # Gemini retorna ```json ... ``` em markdown
         if _content.startswith("```"):
             _content = _content.split("```", 2)[1] if _content.startswith("````") else _content.split("```")[1]

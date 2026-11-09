@@ -12,7 +12,7 @@ from mcp import ClientSession
 from mcp.client.streamable_http import streamable_http_client
 
 from logger import new_request_id, log_entry
-from providers import get_provider_api, build_chat_url
+from providers import get_provider_api, build_chat_url, reasoning_off
 from rag import get_rag_context
 from defenses import (
     d1_input_filter, d2_input_judge,
@@ -134,12 +134,11 @@ def _call_llm_openai_compat(llm: dict, messages: list, tools: list, rid: str, co
         headers={"Authorization": f"Bearer {llm['api_key']}"},
         json={
             "model":       llm["model"],
-            "temperature": llm["temperature"],
+            "temperature": llm.get("temperature", 0),
             "max_tokens":  llm.get("max_tokens", 1024),
             "messages":    messages,
-            "tools":       tools,
-            "reasoning_effort": "none",
-
+            **({"tools": tools} if tools else {}),
+            **reasoning_off(llm),
         },
         timeout=llm.get("timeout", 60),
     )
@@ -178,6 +177,8 @@ def _convert_messages_to_gemini(messages: list[dict]) -> list[dict]:
 
 def _call_llm_gemini_native(llm: dict, messages: list, tools: list, rid: str, config: dict) -> dict:
     """Chamada a endpoint nativo do Gemini (v1beta/models/gemini-*:generateContent)."""
+    if tools:
+        log_entry(rid, "APP", "WARN", "gemini-native não suporta tool calling; tools ignoradas", 0.0)
     chat_url = build_chat_url(llm.get("url") or llm["base_url"], llm["model"])
 
     # Converter mensagens para formato Gemini
